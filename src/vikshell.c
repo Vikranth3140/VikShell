@@ -91,7 +91,7 @@ void listFiles(const char *path) {
 
 void printVikShell() {
     clear();
-
+    attron(COLOR_PAIR(1));
     printw(
         "  _____ _           _      _____ _           _\n"
         " |  __ (_)         | |    / ____| |         | |\n"
@@ -105,6 +105,7 @@ void printVikShell() {
         "- Explore basic Linux commands such as 'ls', 'cd', 'mkdir', 'dir', 'word', 'date'.\n"
         "- If you want to exit VikShell, type 'exit'.\n\n"
     );
+    attroff(COLOR_PAIR(1));
     refresh();
 }
 
@@ -127,6 +128,8 @@ int main() {
     char input[100];
 
     initscr();
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
     cbreak();
     keypad(stdscr, TRUE);
     scrollok(stdscr, TRUE);
