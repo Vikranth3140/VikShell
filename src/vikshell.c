@@ -173,7 +173,6 @@ int main() {
                 date_cmd[3] = NULL;
 
                 executeExternalCommand(date_cmd[0], date_cmd);
-
             } else if (strcmp(token, "word") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
@@ -201,6 +200,7 @@ int main() {
                 } else {
                     printw("Error: Invalid command\n");
                 }
+
             } else if (strcmp(token, "cd") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
@@ -212,6 +212,7 @@ int main() {
                 } else {
                     printw("Error: Invalid command\n");
                 }
+
             } else if (strcmp(token, "mkdir") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
@@ -223,6 +224,7 @@ int main() {
                 } else {
                     printw("Error: Invalid command\n");
                 }
+
             } else if (strcmp(token, "ls") == 0) {
                 token = strtok(NULL, " ");
 
@@ -240,20 +242,24 @@ int main() {
                         perror("popen");
                         printw("Error: Unable to execute ls command\n");
                     } else {
-                        printw("Listing contents of %s:\n", token != NULL ? token : ".");
+                        printw("Listing contents");
                         while (fgets(buffer, sizeof(buffer), ls_output) != NULL) {
                             printw("%s", buffer);
                         }
                         pclose(ls_output);
                     }
                     refresh();
+
             } else if (strcmp(token, "help") == 0) {
                 printHelp();
+
             } else if (strcmp(token, "exit") == 0) {
                 printw("Exiting custom shell.\n");
                 break;
+
             } else {
                 printw("Unknown command: %s\n", input);
+
             }
         }
     }
