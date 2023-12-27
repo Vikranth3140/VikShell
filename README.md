@@ -1,37 +1,74 @@
-# Custom Linux Shell
+# VikShell 
 
-This is a special Linux/Unix system with a custom shell that provides three specific commands: `word`, `dir`, and `date`.
+VikShell is a custom Linux/Unix shell that provides various commands to perform file and directory operations. 
 
-## Getting Started
+## Getting Started  
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/Vikranth3140/Custom-Linux-Shell.git
+### Clone the Repository 
+```bash 
+git clone https://github.com/Vikranth3140/VikShell.git
 ```
 
 ### Navigate to the Project Directory
 
 ```bash
-cd Custom-Linux-Shell
+cd VikShell
 ```
 
-### Compile the Code
+### Compile & Run the Code
 
 ```bash
 make
 ```
 
-### Run the Custom Shell
-
-```bash
-./source
-```
-
 Available Commands
 ------------------
 
-### 1\. `word`
+### 1\. `ls`
+
+The `ls` command lists files and directories. It supports the following options:
+
+*   `-r`: Reverse the order of the sort.
+*   `-v`: Display additional information about each file.
+
+**Syntax:**
+
+```bash
+ls [-r | -v] [directory]
+```
+
+### 2\. `cd`
+
+The `cd` command changes the current directory.
+
+**Syntax:**
+
+```bash
+cd [directory]
+```
+
+### 3\. `mkdir`
+
+The `mkdir` command creates a new directory.
+
+**Syntax:**
+
+
+```bash
+mkdir [directory]
+```
+
+### 4\. `help`
+
+The `help` command displays information about available commands.
+
+**Syntax:**
+
+```bash
+help
+```
+
+### 5\. `word`
 
 The `word` command reads the number of words in a text file. It supports the following options:
 
@@ -44,7 +81,7 @@ The `word` command reads the number of words in a text file. It supports the fol
 word [-n | -d] [file_name1] [file_name2]
 ```
 
-### 2\. `dir`
+### 6\. `dir`
 
 The `dir` command creates a directory and changes the path to that directory. It supports the following options:
 
@@ -57,7 +94,7 @@ The `dir` command creates a directory and changes the path to that directory. It
 dir [-r | -v] [dir_name]
 ```
 
-### 3\. `date`
+### 7\. `date`
 
 The `date` command returns the last modified date and time of a particular file. It supports the following options:
 
@@ -70,10 +107,20 @@ The `date` command returns the last modified date and time of a particular file.
 date [-d | -R] [file_name]
 ```
 
+### 8\. `exit`
+
+The `exit` command exits VikShell.
+
+**Syntax:**
+
+```bash
+exit
+```
+
 Contributing
 ------------
 
-Welcome to contribute to the Custom Linux Shell! Feel free to fork the repository, and suggest any improvements. To contribute, follow these steps:
+Welcome to contribute to VikShell! Feel free to fork the repository and suggest any improvements. To contribute, follow these steps:
 
 1.  Fork the repository.
 2.  Create a new branch for your feature or bug fix.
@@ -83,7 +130,13 @@ Welcome to contribute to the Custom Linux Shell! Feel free to fork the repositor
 
 Thank you for your contributions!
 
-## Author
-[Vikranth Udandarao](https://github.com/Vikranth3140)
-\
-[Anushka Korlapati](https://github.com/anushka-korlapati)
+License
+-------
+
+This project is licensed under the [MIT License](LICENSE.md).
+
+Authors
+-------
+
+*   [Vikranth Udandarao](https://github.com/Vikranth3140)
+*   [Anushka Korlapati](https://github.com/anushka-korlapati)
