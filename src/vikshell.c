@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <ncurses.h>
+#include <dirent.h>
 
 int n_flag = 0;
 int d_flag = 0;
@@ -15,7 +16,6 @@ typedef struct Wordcount {
 } Wordcount;
 
 Wordcount word_count(const char *filename) {
-
     FILE *file;
     file = fopen(filename, "r");
 
@@ -28,7 +28,7 @@ Wordcount word_count(const char *filename) {
     }
 
     char ch;
-    
+
     while ((ch = fgetc(file)) != EOF) {
         if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\0') {
             words++;
@@ -56,7 +56,6 @@ int word_count_difference(const char *filename1, const char *filename2) {
     return diff;
 }
 
-
 void executeExternalCommand(const char *command, char *const args[]) {
     int pid = fork();
 
@@ -65,7 +64,6 @@ void executeExternalCommand(const char *command, char *const args[]) {
         perror("execvp failed");
         exit(EXIT_FAILURE);
     } else if (pid > 0) {
-        
         wait(NULL);
     } else {
         perror("fork failed");
@@ -73,7 +71,27 @@ void executeExternalCommand(const char *command, char *const args[]) {
     }
 }
 
+void listFiles(const char *path) {
+    DIR *dir;
+    struct dirent *entry;
+
+    dir = opendir(path);
+    if (dir == NULL) {
+        perror("opendir");
+        return;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        printw("%s\n", entry->d_name);
+        refresh();
+    }
+
+    closedir(dir);
+}
+
 void printVikShell() {
+    clear();
+
     printw(
         "  _____ _           _      _____ _           _\n"
         " |  __ (_)         | |    / ____| |         | |\n"
@@ -84,9 +102,8 @@ void printVikShell() {
         "Welcome to VikShell!\n\n"
         "To get started, you can try the following commands:\n"
         "- Type 'help' for a list of available commands.\n"
-        "- Explore basic Linux commands such as 'ls', 'cd', 'mkdir', etc.\n"
-        "- If you want to exit VikShell, type 'exit' or press Ctrl+C.\n\n"
-        "Feel free to customize VikShell and add your own features!\n\n"
+        "- Explore basic Linux commands such as 'ls', 'cd', 'mkdir', 'dir', 'word', 'date'.\n"
+        "- If you want to exit VikShell, type 'exit'.\n\n"
     );
     refresh();
 }
@@ -98,8 +115,10 @@ void printHelp() {
         "- ls: List files and directories.\n"
         "- cd <directory>: Change current directory.\n"
         "- mkdir <directory>: Create a new directory.\n"
+        "- dir [-r] [-v] <directory>: Create or remove a directory.\n"
+        "- word [-n | -d] <filename1> [filename2]: Count words in files.\n"
+        "- date: Display current date and time.\n"
         "- exit: Exit VikShell.\n\n"
-        "Feel free to explore more Linux commands!\n\n"
     );
     refresh();
 }
@@ -119,7 +138,7 @@ int main() {
         getnstr(input, sizeof(input) - 1);
 
         char *token = strtok(input, " ");
-        
+
         if (token != NULL) {
             if (strcmp(token, "dir") == 0) {
                 char *dir_cmd[3];
@@ -142,101 +161,84 @@ int main() {
                 }
                 executeExternalCommand(dir_cmd[0], dir_cmd);
 
-            }
-            
-            else if (strcmp(token, "date") == 0) {
-                char *date_cmd[3]; 
+            } else if (strcmp(token, "date") == 0) {
+                char *date_cmd[3];
 
-                date_cmd[0] = "./date"; 
+                date_cmd[0] = "./date";
                 date_cmd[1] = input;
                 date_cmd[2] = NULL;
                 date_cmd[3] = NULL;
 
                 executeExternalCommand(date_cmd[0], date_cmd);
 
-            }
-            
-            else if (strcmp(token, "word") == 0) {
+            } else if (strcmp(token, "word") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
                     if (strcmp(token, "-n") == 0) {
                         token = strtok(NULL, " ");
                         if (token != NULL) {
                             Wordcount result = word_count(token);
-                            printf("Word count (-n) for file %s: %d\n", token, result.word_n);
+                            printw("Word count (-n) for file %s: %d\n", token, result.word_n);
                         } else {
-                            printf("Error: Invalid command\n");
+                            printw("Error: Invalid command\n");
                         }
                     } else if (strcmp(token, "-d") == 0) {
                         char *filename1 = strtok(NULL, " ");
                         char *filename2 = strtok(NULL, " ");
                         if (filename1 != NULL && filename2 != NULL) {
                             int diff = word_count_difference(filename1, filename2);
-                            printf("Word count difference between %s and %s: %d\n", filename1, filename2, diff);
+                            printw("Word count difference between %s and %s: %d\n", filename1, filename2, diff);
                         } else {
-                            printf("Error: Invalid command\n");
+                            printw("Error: Invalid command\n");
                         }
                     } else {
                         Wordcount result = word_count(token);
-                        printf("Word count (default) for file %s: %d\n", token, result.def_main);
+                        printw("Word count (default) for file %s: %d\n", token, result.def_main);
                     }
                 } else {
-                    printf("Error: Invalid command\n");
+                    printw("Error: Invalid command\n");
                 }
-            }
-            
-            else if (strcmp(token, "cd") == 0) {
+            } else if (strcmp(token, "cd") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
-                    chdir(token);
+                    if (chdir(token) == 0) {
+                        printw("Changed directory to: %s\n", token);
+                    } else {
+                        printw("Error: Unable to change directory to: %s\n", token);
+                    }
                 } else {
-                    printf("Error: Invalid command\n");
+                    printw("Error: Invalid command\n");
                 }
-            }
-            
-            else if (strcmp(token, "mkdir") == 0) {
+            } else if (strcmp(token, "mkdir") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
-                    mkdir(token, 0777);
+                    if (mkdir(token, 0777) == 0) {
+                        printw("Directory created: %s\n", token);
+                    } else {
+                        printw("Error: Unable to create directory: %s\n", token);
+                    }
                 } else {
-                    printf("Error: Invalid command\n");
+                    printw("Error: Invalid command\n");
                 }
-            }
-            
-            else if (strcmp(token, "ls") == 0) {
+            } else if (strcmp(token, "ls") == 0) {
                 char *ls_cmd[3];
-                ls_cmd[0] = "./ls";
+                ls_cmd[0] = "ls";
                 ls_cmd[1] = NULL;
                 ls_cmd[2] = NULL;
                 ls_cmd[3] = NULL;
 
                 token = strtok(NULL, " ");
                 if (token != NULL) {
-                    if (strcmp(token, "-r") == 0 || strcmp(token, "-v") == 0) {
-                        ls_cmd[1] = token;
-                        token = strtok(NULL, " ");
-                        if (token != NULL) {
-                            ls_cmd[2] = token;
-                        }
-                    } else {
-                        ls_cmd[2] = token;
-                    }
+                    ls_cmd[1] = token;
                 }
                 executeExternalCommand(ls_cmd[0], ls_cmd);
-            }
-
-            else if (strcmp(token, "help") == 0) {
+            } else if (strcmp(token, "help") == 0) {
                 printHelp();
-            }
-
-            else if (strcmp(token, "exit") == 0) {
-                printf("Exiting custom shell.\n");
+            } else if (strcmp(token, "exit") == 0) {
+                printw("Exiting custom shell.\n");
                 break;
-
-            }
-            
-            else {
-                printf("Unknown command: %s\n", input);
+            } else {
+                printw("Unknown command: %s\n", input);
             }
         }
     }

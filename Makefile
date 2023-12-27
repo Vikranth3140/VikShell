@@ -1,9 +1,9 @@
 all:
-	gcc word.c -o word -lncurses
-	gcc date.c -o date -lncurses
-	gcc dir.c -o dir -lncurses
-	gcc source.c -o source -lncurses
-	./source
+	gcc src/word.c -o word -lncurses
+	gcc src/date.c -o date -lncurses
+	gcc src/dir.c -o dir -lncurses
+	gcc src/vikshell.c -o vikshell -lncurses
+	./vikshell
 
 clean:
-	rm -f word date dir source
+	rm -f word date dir vikshell
