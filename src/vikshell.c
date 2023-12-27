@@ -224,17 +224,29 @@ int main() {
                     printw("Error: Invalid command\n");
                 }
             } else if (strcmp(token, "ls") == 0) {
-                char *ls_cmd[3];
-                ls_cmd[0] = "ls";
-                ls_cmd[1] = NULL;
-                ls_cmd[2] = NULL;
-                ls_cmd[3] = NULL;
-
                 token = strtok(NULL, " ");
-                if (token != NULL) {
-                    ls_cmd[1] = token;
-                }
-                executeExternalCommand(ls_cmd[0], ls_cmd);
+
+                    FILE *ls_output;
+                    char buffer[128];
+                    char command[128] = "ls";
+
+                    if (token != NULL) {
+                        strcat(command, " ");
+                        strcat(command, token);
+                    }
+
+                    ls_output = popen(command, "r");
+                    if (ls_output == NULL) {
+                        perror("popen");
+                        printw("Error: Unable to execute ls command\n");
+                    } else {
+                        printw("Listing contents of %s:\n", token != NULL ? token : ".");
+                        while (fgets(buffer, sizeof(buffer), ls_output) != NULL) {
+                            printw("%s", buffer);
+                        }
+                        pclose(ls_output);
+                    }
+                    refresh();
             } else if (strcmp(token, "help") == 0) {
                 printHelp();
             } else if (strcmp(token, "exit") == 0) {
