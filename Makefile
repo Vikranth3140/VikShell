@@ -1,8 +1,8 @@
 all:
-	gcc word.c -o word
-	gcc date.c -o date
-	gcc dir.c -o dir
-	gcc source.c -o source
+	gcc word.c -o word -lncurses
+	gcc date.c -o date -lncurses
+	gcc dir.c -o dir -lncurses
+	gcc source.c -o source -lncurses
 	./source
 
 clean:

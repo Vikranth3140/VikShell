@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <ncurses.h>
 
 int n_flag = 0;
 int d_flag = 0;
@@ -72,13 +73,51 @@ void executeExternalCommand(const char *command, char *const args[]) {
     }
 }
 
+void printVikShell() {
+    printw(
+        "  _____ _           _      _____ _           _\n"
+        " |  __ (_)         | |    / ____| |         | |\n"
+        " | |__) | ___  __ _| |_  | (___ | |__   __ _| |\n"
+        " |  ___/ |/ _ \\/ _` | __|  \\___ \\| '_ \\ / _` | |\n"
+        " | |   | |  __/ (_| | |_   ____) | | | | (_| | |\n"
+        " |_|   |_|\\___|\\__,_|\\__| |_____/|_| |_|\\__,_|_|\n\n"
+        "Welcome to VikShell!\n\n"
+        "To get started, you can try the following commands:\n"
+        "- Type 'help' for a list of available commands.\n"
+        "- Explore basic Linux commands such as 'ls', 'cd', 'mkdir', etc.\n"
+        "- If you want to exit VikShell, type 'exit' or press Ctrl+C.\n\n"
+        "Feel free to customize VikShell and add your own features!\n\n"
+    );
+    refresh();
+}
+
+void printHelp() {
+    printw(
+        "\nAvailable Commands:\n"
+        "- help: Display this help message.\n"
+        "- ls: List files and directories.\n"
+        "- cd <directory>: Change current directory.\n"
+        "- mkdir <directory>: Create a new directory.\n"
+        "- exit: Exit VikShell.\n\n"
+        "Feel free to explore more Linux commands!\n\n"
+    );
+    refresh();
+}
+
 int main() {
     char input[100];
 
+    initscr();
+    cbreak();
+    keypad(stdscr, TRUE);
+    scrollok(stdscr, TRUE);
+
+    printVikShell();
+
     while (1) {
-        printf("Shell> ");
-        fgets(input, sizeof(input), stdin);
-        input[strlen(input) - 1] = '\0'; 
+        printw("\nVikShell> ");
+        getnstr(input, sizeof(input) - 1);
+
         char *token = strtok(input, " ");
         
         if (token != NULL) {
@@ -103,11 +142,9 @@ int main() {
                 }
                 executeExternalCommand(dir_cmd[0], dir_cmd);
 
-            } else if (strcmp(token, "exit") == 0) {
-                printf("Exiting custom shell.\n");
-                break;
-
-              } else if (strcmp(token, "date") == 0) {
+            }
+            
+            else if (strcmp(token, "date") == 0) {
                 char *date_cmd[3]; 
 
                 date_cmd[0] = "./date"; 
@@ -117,7 +154,9 @@ int main() {
 
                 executeExternalCommand(date_cmd[0], date_cmd);
 
-            } else if (strcmp(token, "word") == 0) {
+            }
+            
+            else if (strcmp(token, "word") == 0) {
                 token = strtok(NULL, " ");
                 if (token != NULL) {
                     if (strcmp(token, "-n") == 0) {
@@ -144,11 +183,65 @@ int main() {
                 } else {
                     printf("Error: Invalid command\n");
                 }
-            } else {
+            }
+            
+            else if (strcmp(token, "cd") == 0) {
+                token = strtok(NULL, " ");
+                if (token != NULL) {
+                    chdir(token);
+                } else {
+                    printf("Error: Invalid command\n");
+                }
+            }
+            
+            else if (strcmp(token, "mkdir") == 0) {
+                token = strtok(NULL, " ");
+                if (token != NULL) {
+                    mkdir(token, 0777);
+                } else {
+                    printf("Error: Invalid command\n");
+                }
+            }
+            
+            else if (strcmp(token, "ls") == 0) {
+                char *ls_cmd[3];
+                ls_cmd[0] = "./ls";
+                ls_cmd[1] = NULL;
+                ls_cmd[2] = NULL;
+                ls_cmd[3] = NULL;
+
+                token = strtok(NULL, " ");
+                if (token != NULL) {
+                    if (strcmp(token, "-r") == 0 || strcmp(token, "-v") == 0) {
+                        ls_cmd[1] = token;
+                        token = strtok(NULL, " ");
+                        if (token != NULL) {
+                            ls_cmd[2] = token;
+                        }
+                    } else {
+                        ls_cmd[2] = token;
+                    }
+                }
+                executeExternalCommand(ls_cmd[0], ls_cmd);
+            }
+
+            else if (strcmp(token, "help") == 0) {
+                printHelp();
+            }
+
+            else if (strcmp(token, "exit") == 0) {
+                printf("Exiting custom shell.\n");
+                break;
+
+            }
+            
+            else {
                 printf("Unknown command: %s\n", input);
             }
         }
     }
+
+    endwin();
 
     return 0;
 }
