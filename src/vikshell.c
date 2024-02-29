@@ -93,12 +93,11 @@ void printVikShell() {
     clear();
     attron(COLOR_PAIR(1));
     printw(
-        "  _____ _           _      _____ _           _\n"
-        " |  __ (_)         | |    / ____| |         | |\n"
-        " | |__) | ___  __ _| |_  | (___ | |__   __ _| |\n"
-        " |  ___/ |/ _ \\/ _` | __|  \\___ \\| '_ \\ / _` | |\n"
-        " | |   | |  __/ (_| | |_   ____) | | | | (_| | |\n"
-        " |_|   |_|\\___|\\__,_|\\__| |_____/|_| |_|\\__,_|_|\n\n"
+        "__     ___ _     ____  _          _ _ \n"
+        "\\ \\   / (_) | __/ ___|| |__   ___| | |\n"
+        " \\ \\ / /| | |/ /\\___ \\| '_ \\ / _ \\ | |\n"
+        "  \\ V / | |   <  ___) | | | |  __/ | |\n"
+        "   \\_/  |_|_|\\_\\|____/|_| |_|\\___|_|_|\n\n"
         "Welcome to VikShell!\n\n"
         "To get started, you can try the following commands:\n"
         "- Type 'help' for a list of available commands.\n"
@@ -242,7 +241,7 @@ int main() {
                         perror("popen");
                         printw("Error: Unable to execute ls command\n");
                     } else {
-                        printw("Listing contents");
+                        printw("Listing contents: %s\n");
                         while (fgets(buffer, sizeof(buffer), ls_output) != NULL) {
                             printw("%s", buffer);
                         }

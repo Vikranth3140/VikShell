@@ -1,13 +1,14 @@
 # VikShell 
 
-VikShell is a custom Linux/Unix shell that provides various commands to perform file and directory operations. 
+VikShell is a custom Linux/Unix shell that provides various commands to perform file and directory operations.
+It is a CLI tool that can be used to perform file and directory operations.
 
-<img width="1232" alt="image" src="https://github.com/Vikranth3140/VikShell/assets/122410275/7609d2c0-7524-46e0-ab89-ad5d6613e620">
+<img width="1232" alt="image" src="https://github.com/Vikranth3140/VikShell/assets/122410275/48dfb08c-188a-4735-bfd0-15486cd82e73">
 
+## Getting Started
 
-## Getting Started  
+### Clone the Repository
 
-### Clone the Repository 
 ```bash 
 git clone https://github.com/Vikranth3140/VikShell.git
 ```
@@ -24,8 +25,7 @@ cd VikShell
 make
 ```
 
-Available Commands
-------------------
+## Available Commands
 
 ### 1\. `ls`
 
@@ -120,8 +120,7 @@ The `exit` command exits VikShell.
 exit
 ```
 
-Contributing
-------------
+## Contributing
 
 Welcome to contribute to VikShell! Feel free to fork the repository and suggest any improvements. To contribute, follow these steps:
 
@@ -133,13 +132,11 @@ Welcome to contribute to VikShell! Feel free to fork the repository and suggest 
 
 Thank you for your contributions!
 
-License
--------
+## License
 
-This project is licensed under the [MIT License](LICENSE.md).
+This project is licensed under the [MIT License](LICENSE).
 
-Authors
--------
+## Authors
 
 *   [Vikranth Udandarao](https://github.com/Vikranth3140)
 *   [Anushka Korlapati](https://github.com/anushka-korlapati)
