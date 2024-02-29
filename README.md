@@ -1,6 +1,7 @@
 # VikShell 
 
 VikShell is a custom Linux/Unix shell that provides various commands to perform file and directory operations.
+<br>
 It is a CLI tool that can be used to perform file and directory operations.
 
 <img width="1232" alt="image" src="https://github.com/Vikranth3140/VikShell/assets/122410275/48dfb08c-188a-4735-bfd0-15486cd82e73">
